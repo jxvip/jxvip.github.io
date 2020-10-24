@@ -1,0 +1,156 @@
+﻿<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> <meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0 ,maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+
+<meta http-equiv="pragma" content="no-cache"><meta http-equiv="expires" content="0"> 
+<link type="image/x-icon" href="favicon.ico" rel="icon"><link type="image/x-icon" href="favicon.ico" rel="shortcut icon"><link type="image/x-icon" href="favicon.ico" rel="bookmark">
+<title>XyPlayer 智能解析 X3</title>
+<meta name="keywords" content="vip视频解析,vip视频在线解析,vip解析,万能vip视频解析,vip视频全能解析,vip视频,手机vip视频解析,手机在线解析vip视频,优酷vip解析,爱奇艺vip解析,腾讯vip解析,乐视vip解析,芒果vip解析">
+<meta name="description" content="XyPlayer 智能解析为您免费解析主流视频网站的VIP视频,支持爱奇艺、腾讯、优酷、乐视、芒果、搜狐、PPTV等等，可搜索最新的免费福利视频、电影和电视剧资源，欢迎使用！">
+
+<link rel="stylesheet" type="text/css" href="./templets/byg/images/style.css">
+<link rel="stylesheet" type="text/css" href="./templets/byg/images/slideout.css">
+<script src="https://hm.baidu.com/hm.js?dea6bad1057861a8f0ec2b6f8332eec1"></script><script type="text/javascript" src="./include/jquery.min.js"></script>
+<script type="text/javascript" src="./include/class.main.js?time="></script>
+<script type="text/javascript" src="./templets/byg/images/slideout.min.js"></script>
+<script id="xyplay" src="./include/xyplay.min.js?time=1603518366"></script><style type="text/css" abt="234"></style>
+
+<script type="text/javascript" src="./include/jquery.autocomplete.js?ver=1.2"></script>
+<link href="./include/jquery.autocomplete.css" rel="stylesheet">
+<style>
+      #word{
+      background: #fff;
+      color: #000;
+      max-height:170px;
+      overflow-y:auto;
+      overflow-x:hidden;
+      }
+      
+      </style>
+<script>//remove baidu search ad
+var _countAA = 0
+function doBBBd(){
+    var alla = document.getElementsByTagName('a')
+    for(var i = 0; i < alla.length; i++){
+        if(/baidu.com\/(baidu.php\?url=|adrc.php\?t)/.test(alla[i].href)){
+            var _temp = alla[i].parentElement, loop = 0
+            while(loop < 5){
+                _temp = _temp.parentElement
+                loop++
+                if(_temp.parentElement.id == 'content_left'){
+                    _temp.remove()
+                    break
+                }
+            }
+        }
+    }
+    
+    if(_countAA++ < 20){
+        setTimeout(doBBBd, 500)
+    }
+    
+}
+doBBBd()
+document.addEventListener('keyup', function(){_countAA-=10;doBBBd()}, false)
+document.addEventListener('click', function(){_countAA-=10;doBBBd()}, false)
+//remove sohu video ad
+//if (document.URL.indexOf("tv.sohu.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+//remove 56.com video ad
+//if (document.URL.indexOf("56.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+</script></head>
+<body>
+<div class="fixed"></div>
+<div class="Logo"></div>
+<nav id="menu" class="menu slideout-menu slideout-menu">
+<section class="menu-section">
+<h3 class="menu-section-title">视频搜索</h3>
+<form action="./so.php" target="lineFrame" method="get" id="submit">
+<ui class="menu-section-list">
+<li><input id="wd" type="text" name="wd" style="width: 98%;height:98%;text-align: center;" placeholder="输入视频名称" autocomplete="off"></li>
+<button type="submit" style="display:none;"></button>
+<div id="word" style="display:none;"></div>
+<li class="click_work" type="line" num="submit">搜索视频 </li>
+</ui>
+</form>
+</section>
+<section class="menu-section">
+<h3 class="menu-section-title">解析线路</h3>
+<ul class="menu-section-list" id="line"><li class="click_work" style="color:#FFF;background-color:#2693FF;" type="line" num="auto"> 自动√</li><li class="click_work" type="line" num="0"> 推荐线路</li><li class="click_work" type="line" num="1"> 备用线路1</li><li class="click_work" type="line" num="2"> 备用线路2</li><li class="click_work" type="link" num="视频搜索">视频搜索</li><li class="click_work" type="line" num="h">使用说明</li></ul>
+</section>
+<section class="menu-section">
+<h3 class="menu-section-title">直播线路</h3>
+<ul class="menu-section-list" id="live"><li class="click_work" type="live" num="解说电影">解说电影</li><li class="click_work" type="live" num="陈翔六点半">陈翔六点半</li><li class="click_work" type="live" num="赵本山小品">赵本山小品</li><li class="click_work" type="live" num="开心鬼电影">开心鬼电影</li><li class="click_work" type="live" num="五福星电影">五福星电影</li><li class="click_work" type="live" num="经典港片">经典港片</li><li class="click_work" type="live" num="成龙电影">成龙电影</li><li class="click_work" type="live" num="周星驰电影">周星驰电影</li><li class="click_work" type="live" num="周润发电影">周润发电影</li><li class="click_work" type="live" num="刘德华电影">刘德华电影</li><li class="click_work" type="live" num="李连杰电影">李连杰电影</li><li class="click_work" type="live" num="洪金宝电影">洪金宝电影</li><li class="click_work" type="live" num="林正英电影">林正英电影</li><li class="click_work" type="live" num="甄子丹电影">甄子丹电影</li><li class="click_work" type="live" num="古天乐电影">古天乐电影</li><li class="click_work" type="live" num="斯坦森电影">斯坦森电影</li><li class="click_work" type="live" num="徐克导演">徐克导演</li><li class="click_work" type="live" num="王晶导演">王晶导演</li><li class="click_work" type="live" num="古惑仔电影">古惑仔电影</li><li class="click_work" type="live" num="赌博电影">赌博电影</li><li class="click_work" type="live" num="漫威电影">漫威电影</li><li class="click_work" type="live" num="女神港片">女神港片</li><li class="click_work" type="live" num="怪物科幻">怪物科幻</li><li class="click_work" type="live" num="丧尸电影">丧尸电影</li><li class="click_work" type="live" num="战争电影">战争电影</li><li class="click_work" type="live" num="犯罪悬疑">犯罪悬疑</li><li class="click_work" type="live" num="灾难电影">灾难电影</li><li class="click_work" type="live" num="真实改编">真实改编</li><li class="click_work" type="live" num="惊悚电影">惊悚电影</li><li class="click_work" type="live" num="动画电影">动画电影</li></ul>
+</section>
+</nav>
+<main id="main" class="panel slideout-panel slideout-panel">
+<div class="header">
+<div class="nav">
+<button class="btn-hamburger" id="logo" style="top: 5px;"><span class="tooltip">不能播?点我</span></button>
+<i id="list" class="list" style="display: none;"> </i>
+</div>
+<div id="word" class="word"></div>
+<button id="book" class="btns-hamburger">
+</button>
+</div>
+<div class="aside">
+<div id="flaglist" style="display: block;"> </div>
+<div id="playlist" style="display: block;"></div>
+</div>
+<div id="playad" style="display: none;"></div>
+<div id="player" style="display: block;"><iframe id="lineFrame" width="100%" height="100%" src="play.html?url=so.php" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="no" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe></div>
+</main>
+<div id="xyplayer">
+<script type="text/javascript">
+var slideout = new Slideout({
+	'panel': document.getElementById('main'),
+	'menu': document.getElementById('menu'),
+	'padding': 156,
+	'tolerance': 70
+  });
+  document.getElementById('logo').addEventListener('click', function(){slideout.toggle();});
+ // document.getElementById('book').addEventListener('click', function(){slideout.toggle();});
+  document.querySelector('.menu').addEventListener('click', function(eve) {
+	if (eve.target.nodeName === 'LI' || eve.target.nodeName === 'A') { slideout.close(); }
+  });
+  
+ // if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
+	  
+	// $("body").css({"margin-top":"50px","height":$(window).height()-50})
+ // }
+</script>
+<script type="text/javascript">
+var videoObject = {   	 
+	 variable:'xyplay',        //播放器对象名称
+	 logo:'#logo',             //线路切换图标容器,忽略时为'.logo',注意：'.'是样式选择器,'#'是id选择器;
+	 list:'#list',             //剧集切换图标容器,忽略时为'.list';
+     line:'#line',             //线路列表容器,忽略时为'#line';
+     plive:"#live",           //直播容器,忽略时为'#live'; 
+	 plist:'.aside',             // 播放列表 容器,忽略时为'#list';
+	 flaglist:"#flaglist" ,      //来源DIV容器,忽略时为'#flaglist';
+     playlist:'#playlist',      //列表DIV容器,忽略时为'#playlist';
+     player:'#player',	        //视频DIV容器,忽略时为'#player';
+	 playad:'#playad',	        //广告DIV容器,忽略时为'#playad';
+	 input:'#wd',          //搜索框容器,，忽略时为'#wd';
+	 autohide:false,             //是否自动隐藏列表,忽略时为false;
+	 api: 'https://parse.xymov.net/api.php',                 //api地址,忽略时为'api.php'	
+	 loadimg: 'templets/byg/images/loading.gif'   //加载动画,忽略时为空。
+};
+ xyplay=new xyplayer(videoObject);
+
+</script>
+</div> <script> 
+var _hmt = _hmt || [];
+   (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?dea6bad1057861a8f0ec2b6f8332eec1";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm,s);
+})();
+</script>
+</body></html>
