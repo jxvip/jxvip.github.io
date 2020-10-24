@@ -1,0 +1,647 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<script type="text/javascript" src="./include/jquery.min.js"></script>
+<script type="text/javascript" src="./include/class.main.js"></script>
+<link href="./include/jquery.autocomplete.css" rel="stylesheet">
+<script type="text/javascript" src="./include/jquery.autocomplete.js?ver=1.2"></script>
+<title>XyPlayer 智能解析 X3</title>
+<style>
+
+html,body{
+overflow:auto !important;  
+width:100%;
+height: 100%; 
+margin: 0;
+padding: 0;
+
+}
+body{
+  text-align: center;
+  background: #0f3854;
+  background: -webkit-radial-gradient(#0a2e38 0%,#000000 80%); /* Safari 5.1-6.0 */
+  background: -o-radial-gradient(#0a2e38 0%,#000000 80%); /* Opera 11.6-12.0 */
+  background: -moz-radial-gradient(#0a2e38 0%,#000000 80%); /* Firefox 3.6-15 */
+  background: radial-gradient(#0a2e38 0%,#000000 80%); /* 标准语法 */
+  background-size: 100%;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+a{
+  color:#50b2c8;
+
+}
+#clock {
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  color: #daf6ff;
+
+ /* text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0); */
+}
+#clock .time {
+  letter-spacing: 0.05em;
+  font-size: 60px;
+  padding: 5px 0;
+}
+#clock .date {
+  letter-spacing: 0.1em;
+  font-size: 15px;
+}
+#clock .text {
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  padding: 20px 0 0;
+}
+
+#word{
+background: #fff;
+color: #000;
+max-height:170px;
+overflow-y:auto;
+overflow-x:hidden;
+}
+
+#main{
+  text-align: center;
+
+}
+
+h1{ color:red;}
+h2{color:green;}
+h3{color:#a7e9c3}
+h4{color:blue;font-size:50px}
+
+*{ box-sizing: border-box;}
+		
+ div.search {padding: 5px 0;}	
+        form {
+            position: relative;
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        input, button {
+            border: none;
+            outline: none;
+            color:white;
+        }
+        input {
+            width: 100%;
+            height: 42px;
+            padding-left: 13px;
+        }
+
+        button {
+            height: 42px;
+            width: 42px;
+            cursor: pointer;
+            position: absolute;
+        }
+
+       /*搜索框6*/
+        .bar6 input {
+            background: transparent;
+            border-radius:3px;
+            border:2px solid #6599aa ;
+            top: 0;
+            right: 0;
+        }
+        .bar6 button {
+            background:#6599aa;
+            border-radius: 0 5px 5px 0;
+            width: 60px;
+            top: 0;
+            right: 0;
+        }
+        .bar6 button:before {
+            content: "搜索";
+            font-size: 13px;
+            color: white;
+        }
+ 
+    /* 搜索内容样式 */    
+   .list_btn{
+     display: inline-block; 
+     text-decoration: inherit;
+
+    /* 内外边距及宽高属性 */
+     margin: 1%;  padding: 5px;
+     height: 30px;
+     min-width:31%;
+     max-width:95%;
+
+     /* 文字及边框属性 */
+     color:#50b2c8;
+     font-size:13px;
+     border-radius: 5px; 
+     border: 2px solid #50b2c8; 
+     
+    /* 文字剪裁 */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap !important;
+    outline: 0 !important
+    
+  } 
+    /*  移动设备自适应宽高  */  
+    @media screen and (max-width: 650px){.list_btn{min-width:95%;}} 
+      
+    /*清除浮动代码*/
+   .clearfloat{clear:both} 
+
+  .resou{
+        padding-top: 15px;
+   }
+  .resou a{
+      color:#50b2c8;
+      padding: 5px;
+      text-decoration:none; 
+  }
+ 
+  a{text-decoration:none;}
+  
+</style>
+<script>
+function check_str(field){
+	  with(field){
+	  var arr=['{','}','(',')','=',',',';','"','<','>','script','iframe','@','&','%','$','#','*',':','.','if','/','\\'];
+    if("1"=='1'){
+       var str="色情|淫|秽|强奸|另类|乱伦|咻嘿|莉哥|AV";
+       if(str!=''){strs = str.split("|");arr = arr.concat(strs);}
+    }
+	  for (var key in arr) {
+		  if( value.toLowerCase().indexOf(arr[key].toLowerCase()) > -1){			  
+			  return true;
+		  } 
+	  }	 
+	  return false;
+	  
+	}
+ }
+function validate_form(thisform){	
+with(thisform){
+if(wd.value.indexOf('http')===-1){action='./soyun.html';wd.name='wd'}else{action='./';wd.name='url';}
+if(typeof wd!=="undefined" && wd.name=='wd'){
+   if (check_str(wd)){
+	 alert("请勿输入非法字符！");
+     return false
+    }
+	}
+ }
+}
+</script>
+</head>
+<body>
+<div id="clock">
+<div id="main"></div>
+<div class="clearfloat"></div>
+<div id='body'>
+<p class="date"></p>
+<p class="time" id="time">00:00:00</p>
+<p class="text" id="text">2018-08-08 星期一</p><br>
+<div class="search bar6">
+<form action="./" onsubmit="return validate_form(this);" method="get">
+<input id="wd" type="text" name="v" placeholder="请输入视频名称或视频链接" value="">
+<button type="submit"></button>
+<div id="word"></div>
+</form>
+<div class="resou" id="socode_top">
+<font face="verdana" style="color:#50b2c8;"> 热门搜索：</font>
+<a href="./soyun.html?wd=姜子牙" title='人气：549℃'>姜子牙</a>
+<a href="./soyun.html?wd=斗罗大陆" title='人气：547℃'>斗罗大陆</a>
+<a href="./soyun.html?wd=我和我的家乡" title='人气：375℃'>我和我的家乡</a>
+<a href="./soyun.html?wd=八佰" title='人气：368℃'>八佰</a>
+<a href="./soyun.html?wd=我，喜欢你" title='人气：326℃'>我，喜欢你</a>
+<a href="javascript:void(0);" onclick="echotop();">更多...</a>
+</div>
+<div id="socode_diy">
+<br />
+
+
+<font face="verdana" style="color:#50b2c8;">解析支持：优酷、爱奇艺、腾讯、芒果、乐视、搜狐、MP4、M3U8、FLV等等</font><br />
+</div>
+</div>
+<br><span id="sitetime"> </span><br>
+<br><div id="footer"></div>
+</div>
+</div>
+<script>
+
+//显示日期时间
+var week = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+var timerID = setInterval(updateTime, 1000);
+var sitetime="2014/05/22 14:30:00";
+updateTime();
+
+function updateTime() {
+    var cd = new Date();
+    $('#time').text(zeroPadding(cd.getHours(), 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2));
+    $('#text').text(zeroPadding(cd.getFullYear(), 4) + '-' + zeroPadding(cd.getMonth()+1, 2) + '-' + zeroPadding(cd.getDate(), 2) + ' ' + week[cd.getDay()]);
+    SiteTime(sitetime);
+};
+
+function zeroPadding(num, digit) {
+    var zero = '';
+    for(var i = 0; i < digit; i++) {
+        zero += '0';
+    }
+    return (zero + num).slice(-digit);
+}
+//网站运行时间
+function SiteTime(time){
+var seconds =1000;
+var minutes = seconds *60;
+var hours = minutes *60;
+var days = hours *24;
+var years = days *365;
+var dateBegin = new Date(time.replace(/-/g, "/"));//将-转化为/，使用new Date
+var dateEnd = new Date();//获取当前时间
+var diff = dateEnd.getTime() - dateBegin.getTime();//时间差的毫秒数;
+var diffYears =Math.floor(diff/years);
+var diffDays =Math.floor((diff/days)-diffYears*365);
+var diffHours =Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+var diffMinutes =Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+var diffSeconds =Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+document.getElementById("sitetime").innerHTML=" 已运行"+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"; 
+}
+
+</script>
+<script>
+
+//入口
+function init() {
+var wd= _GET("wd");
+var url= _GET("url");
+if(wd==="" && url==="" ){
+//w="...请输入视频地址...  ";
+w='<br><br><font size="4" color="#50b2c8">...视</font><font color="#50b2c8">频地址不能为空...</font>';
+
+$(".date").html(w);
+}
+if(wd!==""){getvideo(wd);}
+
+       w="星源网络提供技术支持";
+
+       w+='  <a  style="color:#daf6ff;"  href="javascript:void(0);" onclick="echoby();" >免责声明 </a><br><br>';
+         $("#footer").html(w);
+         toggleCenter();
+}
+    
+//显示版权
+function echoby() {
+    
+      alert("本站所有视频均来自外部引用，本站不存储不制作任何视频！\r\n 如有侵权问题，请与源站联系,谢谢合作！");
+        
+    }     
+
+  //搜索排行  
+ function echotop(){
+   if ($("#main").html().indexOf("搜索排行榜")!=-1){
+            $("#main").html("");
+   }else{
+    var w = "<br><br><div style='text-align:center;'><h3>搜索排行榜-TOP50</h3>";
+          title="姜子牙";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=姜子牙' title='人气：549℃'><strong>" + title+ "</strong></a>";
+               title="斗罗大陆";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=斗罗大陆' title='人气：547℃'><strong>" + title+ "</strong></a>";
+               title="我和我的家乡";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=我和我的家乡' title='人气：375℃'><strong>" + title+ "</strong></a>";
+               title="八佰";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=八佰' title='人气：368℃'><strong>" + title+ "</strong></a>";
+               title="我，喜欢你";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=我，喜欢你' title='人气：326℃'><strong>" + title+ "</strong></a>";
+               title="沉默的真相";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=沉默的真相' title='人气：222℃'><strong>" + title+ "</strong></a>";
+               title="风犬少年的天空";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=风犬少年的天空' title='人气：211℃'><strong>" + title+ "</strong></a>";
+               title="重启之极海听雷第二季";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=重启之极海听雷第二季' title='人气：180℃'><strong>" + title+ "</strong></a>";
+               title="琉璃";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=琉璃' title='人气：171℃'><strong>" + title+ "</strong></a>";
+               title="元龙";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=元龙' title='人气：148℃'><strong>" + title+ "</strong></a>";
+               title="半是蜜糖半是伤";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=半是蜜糖半是伤' title='人气：118℃'><strong>" + title+ "</strong></a>";
+               title="平凡的荣耀";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=平凡的荣耀' title='人气：117℃'><strong>" + title+ "</strong></a>";
+               title="夺冠";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=夺冠' title='人气：107℃'><strong>" + title+ "</strong></a>";
+               title="急先锋";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=急先锋' title='人气：102℃'><strong>" + title+ "</strong></a>";
+               title="灵笼";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=灵笼' title='人气：93℃'><strong>" + title+ "</strong></a>";
+               title="海贼王";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=海贼王' title='人气：90℃'><strong>" + title+ "</strong></a>";
+               title="庆余年";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=庆余年' title='人气：83℃'><strong>" + title+ "</strong></a>";
+               title="风云争霸";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=风云争霸' title='人气：79℃'><strong>" + title+ "</strong></a>";
+               title="重启";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=重启' title='人气：72℃'><strong>" + title+ "</strong></a>";
+               title="长安诺";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=长安诺' title='人气：71℃'><strong>" + title+ "</strong></a>";
+               title="下一站婚姻";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=下一站婚姻' title='人气：71℃'><strong>" + title+ "</strong></a>";
+               title="性生活第一季";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=性生活第一季' title='人气：64℃'><strong>" + title+ "</strong></a>";
+               title="花木兰";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=花木兰' title='人气：62℃'><strong>" + title+ "</strong></a>";
+               title="我的女友是机器人";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=我的女友是机器人' title='人气：59℃'><strong>" + title+ "</strong></a>";
+               title="使徒行者3";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=使徒行者3' title='人气：54℃'><strong>" + title+ "</strong></a>";
+               title="德云斗笑社";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=德云斗笑社' title='人气：52℃'><strong>" + title+ "</strong></a>";
+               title="信条";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=信条' title='人气：51℃'><strong>" + title+ "</strong></a>";
+               title="秦时明月";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=秦时明月' title='人气：50℃'><strong>" + title+ "</strong></a>";
+               title="重生";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=重生' title='人气：50℃'><strong>" + title+ "</strong></a>";
+               title="明星大侦探";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=明星大侦探' title='人气：49℃'><strong>" + title+ "</strong></a>";
+               title="穿书自救指南";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=穿书自救指南' title='人气：47℃'><strong>" + title+ "</strong></a>";
+               title="宫心计2";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=宫心计2' title='人气：46℃'><strong>" + title+ "</strong></a>";
+               title="全职高手";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=全职高手' title='人气：44℃'><strong>" + title+ "</strong></a>";
+               title="灵魂摆渡";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=灵魂摆渡' title='人气：40℃'><strong>" + title+ "</strong></a>";
+               title="诛仙";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=诛仙' title='人气：38℃'><strong>" + title+ "</strong></a>";
+               title="瞄准";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=瞄准' title='人气：38℃'><strong>" + title+ "</strong></a>";
+               title="猪猪侠之恐龙日记";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=猪猪侠之恐龙日记' title='人气：38℃'><strong>" + title+ "</strong></a>";
+               title="最佳女婿";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=最佳女婿' title='人气：37℃'><strong>" + title+ "</strong></a>";
+               title="亲爱的自己";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=亲爱的自己' title='人气：37℃'><strong>" + title+ "</strong></a>";
+               title="异星灾变";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=异星灾变' title='人气：36℃'><strong>" + title+ "</strong></a>";
+               title="太古神王";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=太古神王' title='人气：36℃'><strong>" + title+ "</strong></a>";
+               title="小娘惹";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=小娘惹' title='人气：35℃'><strong>" + title+ "</strong></a>";
+               title="我喜欢你";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=我喜欢你' title='人气：35℃'><strong>" + title+ "</strong></a>";
+               title="神探飞机头";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=神探飞机头' title='人气：34℃'><strong>" + title+ "</strong></a>";
+               title="唐砖";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=唐砖' title='人气：34℃'><strong>" + title+ "</strong></a>";
+               title="视频";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=视频' title='人气：33℃'><strong>" + title+ "</strong></a>";
+               title="小大夫";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=小大夫' title='人气：33℃'><strong>" + title+ "</strong></a>";
+               title="约定期间爱上你";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=约定期间爱上你' title='人气：32℃'><strong>" + title+ "</strong></a>";
+               title="三十而已";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=三十而已' title='人气：31℃'><strong>" + title+ "</strong></a>";
+               title="青青子衿";
+
+
+
+      w+= "<a  class='list_btn' target='_self' href='./soyun.html?wd=青青子衿' title='人气：31℃'><strong>" + title+ "</strong></a>";
+        w+=  "</div>";
+    $("#main").html(w);
+}
+    toggleCenter();	
+ }
+
+ 
+
+
+
+
+
+
+
+
+//刷新列表
+function  relist(data){
+      if(data&&data.success)
+        {   	 
+	     var v=data.info;    
+       var w = "<br><br><div style='text-align:center;'><h3>搜索到相关视频" + v.length + "个，请点击访问</h3>";
+       for (i = 0, len = v.length; i < len; i++) 
+		   {
+		     var href="./?flag=" + v[i].flag+"&type=" +v[i].type + "&id=" + v[i].id + "&wd=" +v[i].title;
+        var title=removeHTMLTag(decodeURIComponent(v[i].title),true)+"(" +(v[i].from)+")";  
+      
+        w+= "<a  class='list_btn '   target='_self'   href='" +href +"' title='"+ title+"' ><strong>" + title + "</strong></a>";
+
+    
+
+      }
+             w+=  "</div>";
+             
+       }else{     
+	        	   
+	       var w='<h3 >很抱歉，未搜索到相关资源</h3>';     
+	    	$("#info").html('请修改影片名后重新搜索');
+
+        }      
+         $("#main").html(w);
+         $("#body").show();
+         toggleCenter();	 
+		 
+}
+
+//取视频数据
+function getvideo(word){
+          $.ajax({
+              url: './api.php?wd='+word,
+              timeout:10000,
+              dataType: 'jsonp',
+              jsonp: 'cb',
+              beforeSend: function() {
+                $("#body").hide();
+                $("#main").html('<h3 >正在搜索中,请稍后...</h3>'); 
+              },
+              success: function (data) {
+                 relist(data);
+              },
+              error: function () {
+                relist();
+              }
+          });
+}
+
+//自适应大小位置
+function toggleCenter() {
+
+if($("#main").height() + $("#clock").height()>$(window).height()){
+ 
+    $("#clock").css("position","static");
+
+}else{
+
+   $("#clock").css("position","absolute");$("#clock").css("top",($(window).height() -$("#clock").height())/2-20);
+
+}
+  
+ if($(window).width()<=$("#clock").width()){$("#clock").css("left",0);}else{ $("#clock").css("left",($(window).width()-$("#clock").width())/2);} 
+
+}
+$(window).resize(function(){ toggleCenter();}); 
+
+
+init();
+
+</script>
+</body>
+</html>
