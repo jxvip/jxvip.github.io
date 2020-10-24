@@ -275,7 +275,9 @@ document.getElementById("sitetime").innerHTML=" 已运行"+diffYears+" 年 "+dif
 <script>
 
 //入口
-function init() {
+
+updateInfo();
+function updateInfo() {
 var wd= _GET("wd");
 var url= _GET("url");
 if(wd==="" && url==="" ){
@@ -284,14 +286,42 @@ w='<br><br><font size="4" color="#50b2c8">...视</font><font color="#50b2c8">频
 
 $(".date").html(w);
 }
-if(wd!==""){getvideo(wd);}
-
+if(wd!=="")
+ {     
+    var xyplay=parent.xyplay;
+    if("undefined" !== typeof xyplay )   
+    {
+         if(xyplay.data.success)
+        {   	 
+	     var v=xyplay.data.info;    
+	     var w = "<br><br><div style='text-align:center;'><h3>搜索到相关视频" + v.length + "个，请点击访问</h3>";
+             for (i = 0, len = v.length; i < len; i++) 
+		  {
+		     var href="./?flag=" + v[i].flag+"&type=" +v[i].type + "&id=" + v[i].id + "&wd=" +v[i].title;
+                     var title=removeHTMLTag(decodeURIComponent(v[i].title),true)+"(" +(v[i].from)+")";
+		     w+= "<a  class='list_btn' target='_parent' href='" +href +"' title='"+ title+"' ><strong>" + title + "</strong></a>";
+                  }
+             w+=  "</div>";
+             
+       }else{     
+	       toggleCenter(false);	   	   
+	       var w='<h3 >很抱歉，未搜索到相关资源</h3>';     
+		$("#info").html('请修改影片名后重新搜索');
+     	
+        }      
+         $("#main").html(w);
+		 
+    }
+}
        w="星源网络提供技术支持";
 
        w+='  <a  style="color:#daf6ff;"  href="javascript:void(0);" onclick="echoby();" >免责声明 </a><br><br>';
+      
          $("#footer").html(w);
          toggleCenter();
+	   
 }
+
     
 //显示版权
 function echoby() {
@@ -571,55 +601,6 @@ function echoby() {
 
 
 
-//刷新列表
-function  relist(data){
-      if(data&&data.success)
-        {   	 
-	     var v=data.info;    
-       var w = "<br><br><div style='text-align:center;'><h3>搜索到相关视频" + v.length + "个，请点击访问</h3>";
-       for (i = 0, len = v.length; i < len; i++) 
-		   {
-		     var href="./?flag=" + v[i].flag+"&type=" +v[i].type + "&id=" + v[i].id + "&wd=" +v[i].title;
-        var title=removeHTMLTag(decodeURIComponent(v[i].title),true)+"(" +(v[i].from)+")";  
-      
-        w+= "<a  class='list_btn '   target='_self'   href='" +href +"' title='"+ title+"' ><strong>" + title + "</strong></a>";
-
-    
-
-      }
-             w+=  "</div>";
-             
-       }else{     
-	        	   
-	       var w='<h3 >很抱歉，未搜索到相关资源</h3>';     
-	    	$("#info").html('请修改影片名后重新搜索');
-
-        }      
-         $("#main").html(w);
-         $("#body").show();
-         toggleCenter();	 
-		 
-}
-
-//取视频数据
-function getvideo(word){
-          $.ajax({
-              url: 'https://parse.xymov.net/api.php?wd='+word,
-              timeout:10000,
-              dataType: 'jsonp',
-              jsonp: 'cb',
-              beforeSend: function() {
-                $("#body").hide();
-                $("#main").html('<h3 >正在搜索中,请稍后...</h3>'); 
-              },
-              success: function (data) {
-                 relist(data);
-              },
-              error: function () {
-                relist();
-              }
-          });
-}
 
 //自适应大小位置
 function toggleCenter() {
@@ -640,7 +621,7 @@ if($("#main").height() + $("#clock").height()>$(window).height()){
 $(window).resize(function(){ toggleCenter();}); 
 
 
-init();
+
 
 </script>
 </body>
