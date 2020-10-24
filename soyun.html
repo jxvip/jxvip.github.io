@@ -604,7 +604,7 @@ function  relist(data){
 //取视频数据
 function getvideo(word){
           $.ajax({
-              url: './api.php?wd='+word,
+              url: 'https://parse.xymov.net/api.php?wd='+word,
               timeout:10000,
               dataType: 'jsonp',
               jsonp: 'cb',
